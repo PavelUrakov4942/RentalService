@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Авторизация
+{% endblock %}
+
+{% block body %}
+<div class="mt-4">
+    <section class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+                <!-- Card -->
+                <div class="">
+                    <!-- Card body -->
+                    <div class="card-body p-5">
+                        <div class="mb-4 text-center">
+                            <h4 class="mb-2 fw-bold">Используйте свои учётные данные для входа</h4>
+                            <span>Нет аккаунта? <a href="/registration" class="ms-1 text-decoration-none">Создать учётную запись</a></span>
+                        </div>
+                        {% for cat, msg in get_flashed_messages(True) %}
+                        {% if cat=="success" %}
+                        <div class="alert alert-success text-center">{{msg}}</div>
+                        {% else %}
+                        <div class="alert alert-warning text-center">{{msg}}</div>
+                        {% endif %}
+                        {% endfor %}
+                        <!-- Form -->
+                        <form method="post">
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Электронная почта</label>
+                                <input type="email" id="email" class="form-control" name="email"
+                                       placeholder="Электронная почта" maxlength="50" required>
+                            </div>
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <div class="d-lg-flex justify-content-between align-items-center">
+                                    <label for="password" class="form-label">Пароль</label>
+                                    <div><a class="text-decoration-none" href="#">Забыли пароль?</a></div>
+                                </div>
+                                <input type="password" id="password" class="form-control" name="password"
+                                       placeholder="**************" minlength="3" maxlength="20" required>
+                            </div>
+                            <div>
+                                <!-- Button -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-light">Войти</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

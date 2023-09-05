@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Создание жалобы
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+<script type="text/javascript">
+        var socket = io();
+
+        function addСomplaint(id_rent_in) {
+            let description = document.getElementById('description').value;
+
+            const data = {
+                id_rent_in: id_rent_in,
+                description: description
+            };
+
+            console.log(JSON.stringify(data))
+            socket.emit('add_complaint', JSON.stringify(data));
+        }
+
+</script>
+<div class="mt-4">
+    <section class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-5 py-5 py-xl-0">
+                <!-- Card -->
+                <div class="">
+                    <!-- Card body -->
+                    <div class="card-body p-5">
+                        <h4 class="mb-4 fw-bold text-center">Создание жалобы</h4>
+                        <!-- Form -->
+                        <form>
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Опишите проблему</label>
+                                <textarea type="text" id="description" class="form-control" name="description"
+                                          placeholder="Описание ситуации" rows="5" required></textarea>
+                            </div>
+                            <!-- Button -->
+                            <div class="d-grid">
+                                <button onclick="addСomplaint({{id_rent_in}})" class="btn btn-light">
+                                    Отправить жалобу
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

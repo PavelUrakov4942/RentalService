@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Избранное
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+<script type="text/javascript">
+    const socket = io();
+
+    socket.on('connect', function () {
+        socket.emit('reload_bag');
+    });
+
+
+    socket.on('bag', function (data) {
+        try {
+            const items = JSON.parse(data);
+            console.log(items)
+            const itemsContainer = document.querySelector('#items');
+            itemsContainer.innerHTML = '';
+            items.forEach(item => {
+                const column = document.createElement("div");
+                column.classList.add("col");
+                const card = document.createElement("div");
+                card.classList.add("card", "shadow-sm");
+                const img = document.createElement("img");
+                img.src = item.image_url;
+                img.classList.add("d-flex", "mx-lg-auto", "mt-3", "rounded");
+                img.alt = "Изображение предмета";
+                img.height = "250";
+                img.width = "300";
+                img.loading = "lazy";
+
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                const heading = document.createElement("h4");
+                heading.textContent = item.name;
+
+                const category = document.createElement("span");
+                category.classList.add("d-flex", "text-muted", "fw-medium");
+                category.textContent = item.category;
+
+                const description = document.createElement("p");
+                description.classList.add("card-text");
+                description.textContent = item.description;
+
+                const footCard = document.createElement("div");
+                footCard.classList.add("d-flex", "justify-content-between", "align-items-center");
+
+                const buttonGroup = document.createElement("div");
+                buttonGroup.classList.add("btn-group");
+
+                const rentButton = document.createElement("button");
+                rentButton.type = "button";
+                rentButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
+                rentButton.textContent = "Арендовать";
+                rentButton.onclick = function(){
+                        const href = "/add_rent_in/" + item.id_rent_out;
+                        window.location.href = href;
+                };
+
+                const delButton = document.createElement("button");
+                delButton.type = "button";
+                delButton.classList.add("btn", "btn-sm", "btn-outline-danger");
+                delButton.textContent = "Удалить";
+                delButton.onclick = function(){
+                        socket.emit('del_bag', item.id_bag)
+                };
+
+                const price = document.createElement("small");
+                price.classList.add("text-body-secondary");
+                price.textContent = "Цена: " + item.rent_price + " руб./день";
+
+                buttonGroup.appendChild(rentButton);
+                buttonGroup.appendChild(delButton);
+                footCard.appendChild(buttonGroup);
+                footCard.appendChild(price);
+
+                cardBody.appendChild(heading);
+                cardBody.appendChild(category);
+                cardBody.appendChild(description);
+                cardBody.appendChild(footCard);
+
+                card.appendChild(img);
+                card.appendChild(cardBody);
+                column.appendChild(card);
+                itemsContainer.appendChild(column);
+            }
+            );
+        }
+        catch
+        (error) {
+            console.error('Error parsing message:', error);
+        }
+    })
+        ;
+
+</script>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h4 class="mx-1 mb-3">Избранные объявления</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="items">
+        </div>
+    </div>
+</div>
+{% endblock %}

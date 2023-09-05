@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Новое объявление
+{% endblock %}
+
+{% block body %}
+<div class="mt-4">
+    <section class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-5 py-5 py-xl-0">
+                <!-- Card -->
+                <div class="">
+                    <!-- Card body -->
+                    <div class="card-body p-5">
+                        {% for cat, msg in get_flashed_messages(True) %}
+                        {% if cat=="success" %}
+                        <div class="alert alert-success text-center">{{msg}}</div>
+                        {% else %}
+                        <div class="alert alert-warning text-center">{{msg}}</div>
+                        {% endif %}
+                        {% endfor %}
+                        <h4 class="mb-4 fw-bold text-center">Создание объявления</h4>
+                        <!-- Form -->
+                        <form enctype="multipart/form-data" method="post">
+                            <!-- Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Предмет</label>
+                                <input type="text" id="name" class="form-control" name="name"
+                                       placeholder="Название предмета"
+                                       maxlength="100"
+                                       required>
+                            </div>
+                            <!-- Category -->
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Категория</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">...</option>
+                                    <option value="Одежда">Одежда</option>
+                                    <option value="Инструменты">Инструменты</option>
+                                    <option value="Электроника">Электроника</option>
+                                    <option value="Спорт и активный отдых">Спорт и активный отдых</option>
+                                    <option value="Детские товары">Детские товары</option>
+                                    <option value="Другое">Другое</option>
+                                </select>
+                            </div>
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Описание</label>
+                                <textarea type="text" id="description" class="form-control" name="description"
+                                          placeholder="Описание предмета" rows="5" required></textarea>
+                            </div>
+                            <!-- Rent_price -->
+                            <div class="mb-3">
+                                <label for="rent_price" class="form-label">Стоимость аренды</label>
+                                <input type="number" id="rent_price" class="form-control" name="rent_price"
+                                       placeholder="Стоимость аренды за сутки" required>
+                            </div>
+                            <!-- Image -->
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Изображение</label>
+                                <input type="file" id="file" class="form-control" name="file"
+                                       placeholder="Загрузить изображение" required>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-light">
+                                    Опубликовать объявление
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Rent - Аренда вещей
+{% endblock %}
+
+{% block body %}
+<section class="pt-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Rent</h1>
+            <p class="lead text-body-secondary">Добро пожаловать на платформу аренды Rent! Арендуйте широкий
+                ассортимент предметов - от бытовой техники до спортивного снаряжения. Получайте нужные вам вещи
+                удобным и экономичным способом без покупки.</p>
+            <p>
+                <a href="/catalog" class="btn btn-light my-2">Перейти в каталог</a>
+            </p>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <div id="carouselExampleIndicators" class="carousel carousel-dark slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner rounded-3">
+            <div class="carousel-item active bg-light">
+                <section class="py-5 container">
+                    <div class="row py-lg-5">
+                        <div class="col-lg-8 col-md-8 mx-auto">
+                            <p class="lead text-dark"><b>Для поиска нужных Вам вещей можно сразу перейти в каталог
+                                и выбирать предметы из категорий. Если Вы нашли нужный товар и хотите его арендовать,
+                                то пройдите регистрацию на платформе, это займёт совсем немного времени!</b></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="carousel-item bg-light">
+                <section class="py-5 container">
+                    <div class="row py-lg-5">
+                        <div class="col-lg-8 col-md-8 mx-auto">
+                            <p class="lead text-dark"><b>Зарегистрированным пользователям доступно оформление заявки
+                                на аренду выбранной вещи. Заполните небольшую форму и дождитесь одобрения заявки
+                                арендодателем. В случае одобрения договоритесь о деталях встречи.</b></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="carousel-item bg-light">
+                <section class="py-5 container">
+                    <div class="row py-lg-5">
+                        <div class="col-lg-8 col-md-8 mx-auto">
+                            <p class="lead text-dark"><b>Получите предмет на назначенной встрече и начните им пользоваться!
+                                В день окончания аренды верните товар и поставьте отметку об этом в личном кабинете.
+                                После подтверждения арендодателем получения товара сделка закрывается.</b></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+        </button>
+    </div>
+</div>
+{% endblock %}

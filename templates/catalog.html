@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Каталог
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+<script type="text/javascript">
+    const socket = io();
+
+    socket.on('connect', function () {
+        socket.emit('reload_catalog');
+    });
+
+
+    socket.on('catalog', function (data) {
+        try {
+            const items = JSON.parse(data);
+            console.log(items)
+            const itemsContainer = document.querySelector('#items');
+            itemsContainer.innerHTML = '';
+            items.forEach(item => {
+                const column = document.createElement("div");
+                column.classList.add("col");
+                const card = document.createElement("div");
+                card.classList.add("card", "shadow-sm");
+                const img = document.createElement("img");
+                img.src = item.image_url;
+                img.classList.add("d-flex", "mx-lg-auto", "mt-3", "rounded");
+                img.alt = "Изображение предмета";
+                img.height = "250";
+                img.width = "300";
+                img.loading = "lazy";
+
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                const heading = document.createElement("h4");
+                heading.textContent = item.name;
+
+                const category = document.createElement("span");
+                category.classList.add("d-flex", "text-muted", "fw-medium");
+                category.textContent = item.category;
+
+                const description = document.createElement("p");
+                description.classList.add("card-text");
+                description.textContent = item.description;
+
+                const footCard = document.createElement("div");
+                footCard.classList.add("d-flex", "justify-content-between", "align-items-center");
+
+                const buttonGroup = document.createElement("div");
+                buttonGroup.classList.add("btn-group");
+
+                const rentButton = document.createElement("button");
+                rentButton.type = "button";
+                rentButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
+                rentButton.textContent = "Арендовать";
+                rentButton.onclick = function(){
+                        const href = "/add_rent_in/" + item.id_rent_out;
+                        window.location.href = href;
+                };
+
+                const favoriteButton = document.createElement("button");
+                favoriteButton.type = "button";
+                favoriteButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
+                favoriteButton.textContent = "В избранное";
+                favoriteButton.onclick = function(){
+                        socket.emit('add_bag', item.id_rent_out)
+                };
+
+                const price = document.createElement("small");
+                price.classList.add("text-body-secondary");
+                price.textContent = "Цена: " + item.rent_price + " руб./день";
+
+                buttonGroup.appendChild(rentButton);
+                buttonGroup.appendChild(favoriteButton);
+                footCard.appendChild(buttonGroup);
+                footCard.appendChild(price);
+
+                cardBody.appendChild(heading);
+                cardBody.appendChild(category);
+                cardBody.appendChild(description);
+                cardBody.appendChild(footCard);
+
+                card.appendChild(img);
+                card.appendChild(cardBody);
+                column.appendChild(card);
+                itemsContainer.appendChild(column);
+            }
+            );
+
+            const searchBtn = document.querySelector('.d-flex button');
+            searchBtn.addEventListener('click', function () {
+                const searchText = document.querySelector('.d-flex select[type="search"]').value;
+                const itemsContainer = document.querySelector('#items');
+                const items = itemsContainer.querySelectorAll('.col');
+
+                items.forEach(column => {
+                    const itemCategory = column.querySelector('span').textContent;
+                    if (itemCategory.includes(searchText)) {
+                        column.style.display = 'block';
+                    } else {
+                        column.style.display = 'none';
+                    }
+                });
+            }
+            );
+        }
+        catch
+        (error) {
+            console.error('Error parsing message:', error);
+        }
+    })
+        ;
+
+</script>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-3  py-xl-0">
+                <form class="d-flex" role="search">
+                    <select class="form-select me-2" type="search" placeholder="Поиск по категориям" id="search"
+                        aria-label="Search">
+                        <option value="">Поиск по категориям</option>
+                        <option value="Одежда">Одежда</option>
+                        <option value="Инструменты">Инструменты</option>
+                        <option value="Электроника">Электроника</option>
+                        <option value="Спорт и активный отдых">Спорт и активный отдых</option>
+                        <option value="Детские товары">Детские товары</option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                    <button class="btn btn-secondary" type="button">Поиск</button>
+                </form>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="items">
+        </div>
+    </div>
+</div>
+{% endblock %}

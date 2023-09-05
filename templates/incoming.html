@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Входящие заявки
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+<script type="text/javascript">
+    const socket = io();
+
+    socket.on('connect', function () {
+        socket.emit('reload_incoming');
+    });
+
+
+    socket.on('incoming', function (data) {
+        try {
+            const items = JSON.parse(data);
+            console.log(items)
+            const itemsContainer = document.querySelector('#items');
+            itemsContainer.innerHTML = '';
+            items.forEach(item => {
+                const colDiv = document.createElement("div");
+                colDiv.classList.add("col");
+
+                const cardDiv = document.createElement("div");
+                cardDiv.classList.add("card", "shadow-sm");
+
+                const img = document.createElement("img");
+                img.src = item.image_url;
+                img.classList.add("d-flex", "mx-lg-auto", "mt-3", "rounded");
+                img.alt = "Изображение предмета";
+                img.height = "250";
+                img.width = "300";
+                img.loading = "lazy";
+
+                const cardBodyDiv = document.createElement("div");
+                cardBodyDiv.classList.add("card-body");
+
+                const h4 = document.createElement("h4");
+                h4.textContent = item.name;
+
+                const span = document.createElement("span");
+                span.classList.add("d-flex", "text-muted", "fw-medium");
+                span.textContent = item.category;
+
+                const p = document.createElement("p");
+                p.classList.add("card-text");
+                p.textContent = item.description;
+
+                const small = document.createElement("small");
+                small.classList.add("text-body-secondary");
+                small.textContent = "Цена: " + item.rent_price + "руб./день";
+
+                const h5 = document.createElement("h5");
+                h5.classList.add("mt-4");
+                h5.textContent = "Данные входящей заявки";
+
+                const lab = document.createElement("label");
+                lab.textContent = "Пользователь";
+
+                const p0 = document.createElement("p");
+                p0.textContent = item.username;
+
+                const lab1 = document.createElement("label");
+                lab1.textContent = "Начало";
+
+                const p1 = document.createElement("p");
+                p1.textContent = item.date_rent_start;
+
+                const lab2 = document.createElement("label");
+                lab2.textContent = "Конец";
+
+                const p2 = document.createElement("p");
+                p2.textContent = item.date_rent_finish;
+
+                const lab3 = document.createElement("label");
+                lab3.textContent = "Примечание";
+
+                const p3 = document.createElement("p");
+                p3.textContent = item.note;
+
+                const lab4 = document.createElement("label");
+                lab4.textContent = "Статус";
+
+                const p4 = document.createElement("p");
+                p4.textContent = item.status;
+
+                const h5_2 = document.createElement("h5");
+                h5_2.classList.add("mt-4");
+                h5_2.textContent = "Контакты заявителя";
+
+                const lab5 = document.createElement("label");
+                lab5.textContent = "Телефон";
+
+                const p5 = document.createElement("p");
+                p5.textContent = item.phone;
+
+                const lab6 = document.createElement("label");
+                lab6.textContent = "Электронная почта";
+
+                const p6 = document.createElement("p");
+                p6.textContent = item.email;
+
+                const divFloatEnd = document.createElement("div");
+                divFloatEnd.classList.add("float-end");
+
+                const buttonOk = document.createElement("button");
+                buttonOk.type = "button";
+                buttonOk.classList.add("btn", "btn-sm", "btn-outline-success");
+                buttonOk.textContent = "Одобрить";
+                buttonOk.onclick = function(){
+                        socket.emit('approve', item.id_rent_in, item.id_rent_out)
+                };
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.classList.add("me-1", "btn", "btn-sm", "btn-outline-danger");
+                button.textContent = "Отклонить";
+                button.onclick = function(){
+                        socket.emit('del_rent_in', item.id_rent_in)
+                };
+
+                // Собираем элементы в дерево
+                divFloatEnd.appendChild(button);
+                divFloatEnd.appendChild(buttonOk);
+                cardBodyDiv.appendChild(h4);
+                cardBodyDiv.appendChild(span);
+                cardBodyDiv.appendChild(p);
+                cardBodyDiv.appendChild(small);
+                cardBodyDiv.appendChild(h5);
+                cardBodyDiv.appendChild(lab1);
+                cardBodyDiv.appendChild(p1);
+                cardBodyDiv.appendChild(lab2);
+                cardBodyDiv.appendChild(p2);
+                cardBodyDiv.appendChild(lab3);
+                cardBodyDiv.appendChild(p3);
+                cardBodyDiv.appendChild(lab4);
+                cardBodyDiv.appendChild(p4);
+                cardBodyDiv.appendChild(h5_2);
+                cardBodyDiv.appendChild(lab);
+                cardBodyDiv.appendChild(p0);
+                cardBodyDiv.appendChild(lab5);
+                cardBodyDiv.appendChild(p5);
+                cardBodyDiv.appendChild(lab6);
+                cardBodyDiv.appendChild(p6);
+                cardBodyDiv.appendChild(divFloatEnd);
+
+                cardDiv.appendChild(img);
+                cardDiv.appendChild(cardBodyDiv);
+
+                colDiv.appendChild(cardDiv);
+                itemsContainer.appendChild(colDiv);
+            }
+            );
+        }
+        catch
+        (error) {
+            console.error('Error parsing message:', error);
+        }
+    })
+        ;
+
+</script>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h4 class="mx-1 mb-3">Входящие заявки</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="items">
+        </div>
+    </div>
+</div>
+{% endblock %}

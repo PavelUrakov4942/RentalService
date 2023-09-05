@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Заявка на аренду
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+<script type="text/javascript">
+        var socket = io();
+
+        function addRentIn(id_rent_out) {
+            let date_rent_start = document.getElementById('date_rent_start').value;
+            let date_rent_finish = document.getElementById('date_rent_finish').value;
+            let note = document.getElementById('note').value;
+
+            const data = {
+                id_rent_out: id_rent_out,
+                date_rent_start: date_rent_start,
+                date_rent_finish: date_rent_finish,
+                note: note
+            };
+
+            console.log(JSON.stringify(data))
+            socket.emit('add_rent_in', JSON.stringify(data));
+        }
+
+</script>
+<div class="mt-4">
+    <section class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-5 py-5 py-xl-0">
+                <!-- Card -->
+                <div class="">
+                    <!-- Card body -->
+                    <div class="card-body p-5">
+                        <h4 class="mb-4 fw-bold text-center">Создание заявки</h4>
+                        <!-- Form -->
+                        <form>
+                            <!-- DateRentStart -->
+                            <div class="mb-3">
+                                <label for="date_rent_start" class="form-label">Дата и время начала аренды</label>
+                                <input type="datetime-local" id="date_rent_start" class="form-control" name="date_rent_start" required>
+                            </div>
+                            <!-- DateRentFinish -->
+                            <div class="mb-3">
+                                <label for="date_rent_finish" class="form-label">Дата и время окончания аренды</label>
+                                <input type="datetime-local" id="date_rent_finish" class="form-control" name="date_rent_finish" required>
+                            </div>
+                            <!-- Note -->
+                            <div class="mb-3">
+                                <label for="note" class="form-label">Заметка</label>
+                                <textarea type="text" id="note" class="form-control" name="note"
+                                          placeholder="Заметка по аренде" rows="5" required></textarea>
+                            </div>
+                            <!-- Button -->
+                            <div class="d-grid">
+                                <button onclick="addRentIn({{id_rent_out}})" class="btn btn-light">
+                                    Отправить заявку
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
